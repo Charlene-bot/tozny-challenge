@@ -1,82 +1,122 @@
 import json
-import re
-
-#read file 
-with open(('inventory-manager\database.json'), 'r') as f:
-    json_array = json.load(f)
+import re 
 
 
 
-#print(type(json_array))
+def main():
+    database = inputFile()
+    menu(database)
 
-book_list = []
+def menu(database):
+    print("====== Welcome to Inventory Management System ====")
 
-for item in json_array:
-    if item["type"] == "book":
-        book_list.append(item)
-      #  print(item)
+    while(1):
+        print("1) What are the 5 most expensive items from each category?")
+        print("2) Which cds have a total running time longer than 60 minutes?")
+        print("3) Which authors have also released cds?")
+        print("4) Which items have a title, track, or chapter that contains a year?")
+        print("Enter your choice:- ")
 
-#print(book_list, end='\n')
+        n = int(input())
 
-#book_list.sort(key= lambda x:x["price"], reverse=True)
+        if n ==1:
+            top5 = mostExpensive(database)
+            print(top5)
+        elif n == 2:
+            greaterthan60 = totalRunningTime(database)
+            print(greaterthan60)
+        elif n == 3:
+            doubleAuthor = authorWithCd(database)
+            print(doubleAuthor)
+        elif n == 4:
+            itemContainsYear = itemWithYear(database)
+            print(itemContainsYear)
+        else: 
+            break
 
-#print("SORTED\n")
-#print(book_list)
-#print(book_list[:5])
-#dvd_list = []
-#for item in json_array:
-  #  if item["type"] == "dvd":
- #     #  print(item)
-   #   dvd_list.append(item)
+def inputFile():
 
-#print(dvd_list)
+    with open(('inventory-manager\database.json'), 'r') as f:
+        json_array = json.load(f)
+    return json_array
 
-greaterthan60 = []
-sum = 0 
-for item in json_array:
-    if item["type"] == "cd":
-        for track in item["tracks"]:
-            sum = sum + track["seconds"]
-        if sum > 3600: 
-            greaterthan60.append(item)
+def mostExpensive(database):
+    book_list = []
+    cd_list = []
+    dvd_list = []
+    top5 = []
 
-#print(greaterthan60)
+    for item in database:
+        if item["type"] == "book":
+            book_list.append(item)
+        elif item["type"] == "cd":
+            cd_list.append(item)
+        elif item["type"] == "dvd":
+            dvd_list.append(item)
 
+    book_list.sort(key = lambda x:x["price"], reverse=True)
+    cd_list.sort(key = lambda x:x["price"], reverse=True)
+    dvd_list.sort(key =lambda x:x["price"], reverse=True)
 
-author_list = []
-for item in json_array:
-    if item["type"] == "book":
-        author_list.append(item["author"])
+    top5.append(book_list[:5])
+    top5.append(cd_list[:5])
+    top5.append(dvd_list[:5])
 
-#print(author_list)
+    return top5
 
-artiste_list = []
-for item in json_array:
-    if item["type"] == "cd":
-        if item["author"] in author_list:
-            artiste_list.append(item["author"])
+def totalRunningTime(database):
+    greaterthan60 = []
+    sum = 0
+    maxTime = 3600
+    for item in database:
+        if item["type"] == "cd":
+            for track in item["tracks"]:
+                sum = sum + track["seconds"]
+            if sum > maxTime:
+                greaterthan60.append(item)
+    
+    return greaterthan60
 
-#print(artiste_list)
+def authorWithCd(database):
 
+    authors_Withcd = []
+    author_list = []
 
-#which item contains a year in either title, track or chapter 
-year = r"^(19|20)\d\d"
+    for item in database:
+        if item["type"] == "book":
+            author_list.append(item["author"])
 
-matched = []
-for item in json_array:
-    if item["type"] == "dvd":
-        if re.search(year, item["title"]):
-            matched.append(item)
-    if item["type"] == "cd":
-        if re.search(year, item["title"]):
-            matched.append(item)
-        for track in item["tracks"]:
-            if re.search(year, track["name"]):
+    for item in database:
+        if item["type"] == "cd":
+            if item["author"] in author_list:
+                authors_Withcd.append(item["author"])
+    return authors_Withcd
+
+def itemWithYear(database):
+
+    #which item contains a year in either title, track or chapter 
+
+    year = r"\b(19|20)\d\d"
+
+    matched = []
+    for item in database:
+        if item["type"] == "dvd":
+            if re.search(year, item["title"]):
                 matched.append(item)
-    if item["type"] =="book":
-        if re.search(year, item["title"]):
-            matched.append(item)
+        if item["type"] == "cd":
+            if re.search(year, item["title"]):
+                matched.append(item)
+            for track in item["tracks"]:
+                if re.search(year, track["name"]):
+                    matched.append(item)
+        if item["type"] =="book":
+            if re.search(year, item["title"]):
+                matched.append(item)
+            for chapter in item["chapters"]:
+                if re.search(year, chapter):
+                    matched.append(item)
 
+    return matched 
 
-
-print(matched)
+if __name__ == "__main__":
+    main()

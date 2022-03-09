@@ -1,7 +1,7 @@
 [
     { 
       "price": 15.99,
-      "chapters": ["one", "two", "three"], "year": 1999, 
+      "chapters": ["1990one", "two", "three"], "year": 1999, 
       "title": "foo", 
       "author": "mary", 
       "type": "book" 
@@ -31,7 +31,7 @@
       "type": "book" 
       }, { 
       "price": 10.99, 
-      "chapters": ["one", "two", "three"], "year": 1999, 
+      "chapters": ["one 1990", "two", "three"], "year": 1999, 
       "title": "foo", 
       "author": "joseph", 
       "type": "book" 
