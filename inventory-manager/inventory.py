@@ -1,13 +1,18 @@
+#Authored by Charlene Crystal Namuyige 
+#Code Assessment challenge Tozny 
+
 import json
 import re 
 
 
-
+#driver code 
 def main():
+
     database = inputFile()
     menu(database)
 
 def menu(database):
+
     print("====== Welcome to Inventory Management System ====")
 
     while(1):
@@ -40,6 +45,8 @@ def inputFile():
         json_array = json.load(f)
     return json_array
 
+
+#finds 5 most expensive by sorting and slicing the array 
 def mostExpensive(database):
     book_list = []
     cd_list = []
@@ -94,8 +101,7 @@ def authorWithCd(database):
 
 def itemWithYear(database):
 
-    #which item contains a year in either title, track or chapter 
-
+    #regex expression for valid date 1900-2099
     year = r"\b(19|20)\d\d"
 
     matched = []

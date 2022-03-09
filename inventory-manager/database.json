@@ -1,7 +1,7 @@
 [
     { 
       "price": 15.99,
-      "chapters": ["1990one", "two", "three"], "year": 1999, 
+      "chapters": ["one", "two", "three"], "year": 1999, 
       "title": "foo", 
       "author": "mary", 
       "type": "book" 
