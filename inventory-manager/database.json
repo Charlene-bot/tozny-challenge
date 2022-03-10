@@ -153,5 +153,24 @@
       "title": "Nothing was the same", 
       "author": "drake", 
       "type": "cd" 
+      },
+      {
+        "price": 14.99,
+        "tracks": [
+          {
+            "minutes": 59,
+            "seconds": 21,
+            "name": "long song"
+          },
+          {
+            "seconds": 45,
+            "name": "short song"
+          }
+        ],
+        "year": 2020,
+        "title": "magical album",
+        "author": "sally",
+        "type": "cd"
       }
+      
 ]

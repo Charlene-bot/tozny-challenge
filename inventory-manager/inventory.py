@@ -9,9 +9,23 @@ import re
 def main():
 
     database = inputFile()
+
     menu(database)
 
 def menu(database):
+
+    #refactored code 
+
+    book_list = []
+    cd_list = []
+    dvd_list = []
+    for item in database:
+        if item["type"] == "book":
+            book_list.append(item)
+        elif item["type"] == "cd":
+            cd_list.append(item)
+        elif item["type"] == "dvd":
+            dvd_list.append(item)
 
     print("====== Welcome to Inventory Management System ====")
 
@@ -25,13 +39,13 @@ def menu(database):
         n = int(input())
 
         if n ==1:
-            top5 = mostExpensive(database)
+            top5 = mostExpensive(book_list,cd_list, dvd_list)
             print(top5)
         elif n == 2:
-            greaterthan60 = totalRunningTime(database)
+            greaterthan60 = totalRunningTime(cd_list)
             print(greaterthan60)
         elif n == 3:
-            doubleAuthor = authorWithCd(database)
+            doubleAuthor = authorWithCd(cd_list, book_list)
             print(doubleAuthor)
         elif n == 4:
             itemContainsYear = itemWithYear(database)
@@ -47,20 +61,9 @@ def inputFile():
 
 
 #finds 5 most expensive by sorting and slicing the array 
-def mostExpensive(database):
-    book_list = []
-    cd_list = []
-    dvd_list = []
+#def mostExpensive(database):
+def mostExpensive(book_list, cd_list, dvd_list):
     top5 = []
-
-    for item in database:
-        if item["type"] == "book":
-            book_list.append(item)
-        elif item["type"] == "cd":
-            cd_list.append(item)
-        elif item["type"] == "dvd":
-            dvd_list.append(item)
-
     book_list.sort(key = lambda x:x["price"], reverse=True)
     cd_list.sort(key = lambda x:x["price"], reverse=True)
     dvd_list.sort(key =lambda x:x["price"], reverse=True)
@@ -71,32 +74,33 @@ def mostExpensive(database):
 
     return top5
 
-def totalRunningTime(database):
+def totalRunningTime(cd_list):
     greaterthan60 = []
     sum = 0
     maxTime = 3600
-    for item in database:
-        if item["type"] == "cd":
-            for track in item["tracks"]:
-                sum = sum + track["seconds"]
-            if sum > maxTime:
-                greaterthan60.append(item)
+    minutesToSeconds = 60
+    for item in cd_list:
+        for track in item["tracks"]:
+            test = track.keys()
+            if "minutes" in test:
+                sum = sum + (track["minutes"]*minutesToSeconds)
+            sum = sum + track["seconds"]
+        if sum > maxTime:
+            greaterthan60.append(item)
     
     return greaterthan60
 
-def authorWithCd(database):
+def authorWithCd(book_list, cd_list):
 
     authors_Withcd = []
     author_list = []
 
-    for item in database:
-        if item["type"] == "book":
-            author_list.append(item["author"])
+    for item in book_list:
+        author_list.append(item["author"])
 
-    for item in database:
-        if item["type"] == "cd":
-            if item["author"] in author_list:
-                authors_Withcd.append(item["author"])
+    for item in cd_list:
+        if item["author"] in author_list:
+            authors_Withcd.append(item["author"])
     return authors_Withcd
 
 def itemWithYear(database):
